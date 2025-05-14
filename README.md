@@ -6,16 +6,22 @@ This repository contains Dockerfiles and related resources for building and runn
 
 - `react-cn-docs/`
   - Contains the Dockerfile for building the React Chinese documentation site.
+  - GitHub Repository: [React Chinese Docs](https://github.com/reactjs/zh-hans.react.dev)
 - `react-flow/`
   - Contains the Dockerfile for building the React Flow documentation site.
+  - GitHub Repository: [React Flow](https://github.com/xyflow/web)
 - `react-hook-form/`
   - Contains the Dockerfile for building the React Hook Form documentation site.
+  - GitHub Repository: [React Hook Form Docs](https://github.com/react-hook-form/documentation)
 - `shadcn-ui-docs/`
   - Contains the Dockerfile for building the ShadCN UI documentation site.
+  - GitHub Repository: [ShadCN UI](https://github.com/shadcn-ui/ui)
 - `tailwindcss-docs/`
   - Contains the Dockerfile for building the TailwindCSS documentation site.
+  - GitHub Repository: [TailwindCSS Docs](https://github.com/tailwindlabs/tailwindcss.com)
 - `tanstack/`
   - Contains the Dockerfile for building the TanStack documentation site.
+  - GitHub Repository: [TanStack](https://github.com/tanstack/tanstack.com)
 
 ## Usage
 
