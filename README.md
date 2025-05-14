@@ -22,6 +22,9 @@ This repository contains Dockerfiles and related resources for building and runn
 - `tanstack/`
   - Contains the Dockerfile for building the TanStack documentation site.
   - GitHub Repository: [TanStack](https://github.com/tanstack/tanstack.com)
+- `lucide-icon-docs/`
+  - Contains the Dockerfile for building the Lucide Icon documentation site.
+  - GitHub Repository: [Lucide Icons](https://github.com/lucide-icons/lucide)
 
 ## Usage
 
