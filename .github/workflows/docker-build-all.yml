@@ -1,12 +1,25 @@
-name: Build All Docker Images
+name: Build Docker Images
 
 on:
   push:
     branches: [ "main", "master" ]
+    paths:
+      - '**/Dockerfile'
+      - '**/*.dockerfile'
+      - '.github/workflows/docker-build-all.yml'
   pull_request:
     branches: [ "main", "master" ]
+    paths:
+      - '**/Dockerfile'
+      - '**/*.dockerfile'
+      - '.github/workflows/docker-build-all.yml'
   # 允许手动触发工作流
   workflow_dispatch:
+    inputs:
+      specific_dir:
+        description: '指定构建目录（可选，留空构建所有变更的目录）'
+        required: false
+        type: string
 
 env:
   REGISTRY: ghcr.io
@@ -19,15 +32,45 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       
-      - name: Get all dockerfile directories
+      - name: Get changed dockerfile directories
         id: set-matrix
         run: |
-          DIRS=$(find . -name Dockerfile -type f -exec dirname {} \; | sed 's|^\./||' | jq -R -s -c 'split("\n")[:-1]')
-          echo "matrix=${DIRS}" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.specific_dir }}" ]; then
+            # 如果是手动触发并指定了目录，只构建指定目录
+            if [ -f "${{ github.event.inputs.specific_dir }}/Dockerfile" ]; then
+              echo "matrix=[\"${{ github.event.inputs.specific_dir }}\"]" >> $GITHUB_OUTPUT
+            else
+              echo "Error: Specified directory does not contain a Dockerfile"
+              exit 1
+            fi
+          else
+            # 获取变更的文件列表
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              git fetch origin ${{ github.base_ref }}
+              CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+            elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+              # 手动触发且未指定目录时，获取所有 Dockerfile
+              CHANGED_FILES=$(find . -name Dockerfile)
+            else
+              CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+            fi
+            
+            # 提取包含 Dockerfile 的目录
+            DIRS=$(echo "$CHANGED_FILES" | grep -E "Dockerfile$" | xargs -I {} dirname {} | sed 's|^\./||' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+            if [ "$DIRS" = "[]" ] || [ -z "$DIRS" ]; then
+              echo "No Dockerfile changes detected"
+              echo "matrix=[]" >> $GITHUB_OUTPUT
+            else
+              echo "matrix=$DIRS" >> $GITHUB_OUTPUT
+            fi
+          fi
 
   build:
     needs: prepare
+    if: fromJson(needs.prepare.outputs.matrix)[0] != null
     runs-on: ubuntu-latest
     strategy:
       matrix:
