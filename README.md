@@ -25,6 +25,9 @@ This repository contains Dockerfiles and related resources for building and runn
 - `lucide-icon-docs/`
   - Contains the Dockerfile for building the Lucide Icon documentation site.
   - GitHub Repository: [Lucide Icons](https://github.com/lucide-icons/lucide)
+- `vitejs/`
+  - Contains the Dockerfile for building the Vite Chinese documentation site.
+  - GitHub Repository: [Vite Chinese Docs](https://github.com/vitejs/docs-cn)
 
 ## Usage
 
