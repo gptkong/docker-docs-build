@@ -1,6 +1,6 @@
 # Docker Documentation Build
 
-This repository contains Dockerfiles and related resources for building and running documentation websites for various projects. Each subdirectory corresponds to a specific project and contains the necessary Dockerfile and other resources.
+> 适用于纯内网(无互联网)开发时的文档部署,其中tanstack部分代码进行过地址魔改
 
 ## Directory Structure
 
